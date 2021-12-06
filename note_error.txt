@@ -1,0 +1,185 @@
+Error: Cannot find module '../db' => const db = require("./db")
+Error: Cannot find module 'mongoose' => npm i mongoose
+Error: Cannot find module './../../db/models/todos' 
+     - C:\Users\heemo\Desktop\backend_debugging\todoback\routers\controllers\todos.js (const todoModel = require("./../../db/models/todos");
+) => (const todoModel = require("./../../db/models/todo");
+)
+
+
+
+
+    Error: Cannot find module 'mongose' (const mongoose = require("mongose");
+) =>  (const mongoose = require("mongoose");
+)
+
+
+C:\Users\heemo\Desktop\backend_debugging\todoback\db\models\todo.js:10
+const todoModel = mongoose.module("Todo", todoSchema); (const todoModel = mongoose.module("Todo", todoSchema);
+ )=> (const todoModel = mongoose.model("Todo", todoSchema);
+)
+
+in controllers/todos (module.export = {module.exports = {
+  getAllTodo,
+  getTodoById,
+  getCompletedTodos,
+  createTodo,
+  completeTodo,
+  deleteTodo,
+};
+}) => module.exports = {
+  getAllTodo,
+  getTodoById,
+  getCompletedTodos,
+  createTodo,
+  completeTodo,
+  deleteTodo,
+  updateTodo,
+};
+)
+
+app.use(morgan("dev")); => del
+
+
+Error: listen EACCES: permission denied 4000;  in .env (PORT=4000;) => (PORT=4000)
+
+
+in db/index =>
+const dotenv = require("dotenv");
+ dotenv.config();
+
+
+
+ in db/index (mongoose
+  .connect(process.env.DB_URI, options)
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((err) => {
+    console.log("DB filed");
+  });
+) => (  mongoose.connect(process.env.DB_URL, options).then(
+  () => {
+    console.log("DB connected");
+  },
+  (err) => {
+    console.log(err);
+  }
+);)
+
+
+
+in Router/routes/todos (todoRouter.get("/todo", getTodoById);) =>(todoRouter.get("/todo/:id", getTodoById);)
+
+
+in Router/routes/todos ( const {
+  getAllTodo,
+  getTodoById,
+  getCompletedTodos,
+  createTodo, => createTodo
+  completeTodo,
+  deleteTodo,
+  updateTodo,)
+
+
+
+const createTodo = (req, res) => {
+  const todo = req.body.todo;
+
+  const newTodo = new todoModel({
+    todo,                           
+  });
+
+  =>
+  const createTodo = (req, res) => {
+  const task = req.body;
+
+  const newTodo = new todoModel({
+    task :task,
+  });
+
+  newTodo
+    .save()
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+};
+
+
+
+in db/todo.js   task: { type: Boolean, required: true },
+=>   task: { type: Straing },
+
+
+const getAllTodo = (req, res) => {
+  todoModel
+    .find({ isDel: false })
+    .select("task timeStamp")
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+}; 
+=>
+const getAllTodo = (req, res) => {
+  todoModel
+    .find({ isDel: false })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+};
+
+
+const getTodoById = (req, res) => {
+  const { id } = req.query;
+  todoModel
+    .findOne({ _id: id, isDel: false })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+}; =>
+const getTodoById = (req, res) => {
+  const { id } = req.params;
+  todoModel
+    .findOne({ _id: id, isDel: false })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+};
+
+
+
+const createTodo = (req, res) => {
+  const {task,isDel,isCompleted,timeStamp } = req.body;
+
+  const newTodo = new todoModel({
+    task: task,
+    isDel,
+    isCompleted,
+    timeStamp,
+
+  });
+
+  newTodo
+    .save()
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+};
+
